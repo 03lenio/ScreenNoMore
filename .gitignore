@@ -1,0 +1,9 @@
+# DEV ONLY
+.env
+/data/
+__pycache__/
+*.py[cod]
+.idea/
+
+# Database
+/screennomore.db

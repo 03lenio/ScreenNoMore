@@ -1,0 +1,38 @@
+services:
+  app:
+    build:
+      context: .
+    env_file:
+      - .env
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 20s
+    environment:
+      LOG_LEVEL: INFO
+      MAX_CONSECUTIVE_FAILURES: 10
+      MAX_LOG_PAGES: 20
+      DATABASE_PATH: /data/screennomore.db
+      HEALTH_FILE: /tmp/screennomore/healthy
+      HEALTH_MAX_AGE_SECONDS: 90
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    volumes:
+      - ./data:/data
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import os,time; p=os.environ['HEALTH_FILE']; age=max(float(os.environ['HEALTH_MAX_AGE_SECONDS']), float(os.environ.get('OBSERVING_INTERVAL', 30))*3); raise SystemExit(0 if os.path.exists(p) and time.time()-os.path.getmtime(p) < age else 1)"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    security_opt:
+      - no-new-privileges:true

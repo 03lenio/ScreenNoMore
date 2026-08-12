@@ -1,0 +1,1 @@
+"""Package to hold DB management, later used for e.g. storing settings reliably"""

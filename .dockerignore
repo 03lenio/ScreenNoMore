@@ -1,0 +1,10 @@
+.git
+.idea
+.venv
+.git
+.idea
+.env
+data
+__pycache__
+*.py[cod]
+*.log

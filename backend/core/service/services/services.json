@@ -1,0 +1,23 @@
+[
+    {
+        "name": "Reddit",
+        "nextdns_id": "reddit",
+        "domains": ["reddit.com", "redd.it", "redditmedia.com"],
+        "limit_minutes": 10,
+        "block_duration_minutes": 30
+    },
+    {
+        "name": "YouTube",
+        "nextdns_id": "youtube",
+        "domains": ["youtube.com", "youtu.be", "googlevideo.com", "ytimg.com"],
+        "limit_minutes": 40,
+        "block_duration_minutes": 30
+    },
+    {
+        "name": "Instagram",
+        "nextdns_id": "instagram",
+        "domains": ["instagram.com", "cdninstagram.com"],
+        "limit_minutes": 10,
+        "block_duration_minutes": 30
+    }
+]
