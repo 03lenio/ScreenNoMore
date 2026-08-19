@@ -1,5 +1,6 @@
 import logging
 import os
+from pathlib import Path
 
 from backend.config.config import Config
 from backend.core.observer import Observer
@@ -34,6 +35,10 @@ def _positive_int(name: str, value: str) -> int:
 
 
 def main() -> int:
+    health_file = os.getenv("HEALTH_FILE")
+    if health_file:
+        Path(health_file).unlink(missing_ok=True)
+
     _required_string(config, "NEXTDNS_API_KEY")
     profile_id = _required_string(config, "NEXTDNS_PROFILE_ID")
     services_path = _required_string(config, "SERVICES_CONFIG_PATH")
