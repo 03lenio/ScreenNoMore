@@ -1,1 +1,1 @@
-"""Hold Flask related files"""
+"""Flask-related package."""
