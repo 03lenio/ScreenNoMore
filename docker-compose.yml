@@ -2,29 +2,24 @@ services:
   app:
     build:
       context: .
-    env_file:
-      - .env
     restart: unless-stopped
     init: true
     stop_grace_period: 20s
     environment:
-      LOG_LEVEL: INFO
-      MAX_CONSECUTIVE_FAILURES: 10
-      MAX_LOG_PAGES: 20
-      DATABASE_PATH: /data/screennomore.db
-      HEALTH_FILE: /tmp/screennomore/healthy
+      HEALTH_FILE: /health/healthy
       HEALTH_MAX_AGE_SECONDS: 90
+      OBSERVING_INTERVAL: ${OBSERVING_INTERVAL:-30}
     read_only: true
     tmpfs:
       - /tmp:size=16m,mode=1777
     volumes:
-      - ./data:/data
+      - health:/health:ro
     healthcheck:
       test:
         - CMD
         - python
         - -c
-        - "import os,time; p=os.environ['HEALTH_FILE']; age=max(float(os.environ['HEALTH_MAX_AGE_SECONDS']), float(os.environ.get('OBSERVING_INTERVAL', 30))*3); raise SystemExit(0 if os.path.exists(p) and time.time()-os.path.getmtime(p) < age else 1)"
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=4)"
       interval: 30s
       timeout: 5s
       retries: 3
@@ -36,3 +31,44 @@ services:
         max-file: "3"
     security_opt:
       - no-new-privileges:true
+
+  worker:
+    build:
+      context: .
+    command:
+      - python
+      - main.py
+    env_file:
+      - .env
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 20s
+    environment:
+      LOG_LEVEL: INFO
+      MAX_CONSECUTIVE_FAILURES: 10
+      MAX_LOG_PAGES: 20
+      DATABASE_CONFIG_PATH: /data/screennomore.db
+      HEALTH_FILE: /health/healthy
+      HEALTH_MAX_AGE_SECONDS: 90
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    volumes:
+      - ./data:/data
+      - health:/health
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  health:
+
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: "1400"

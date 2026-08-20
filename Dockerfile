@@ -7,8 +7,8 @@ WORKDIR /app
 
 RUN addgroup --system app && \
     adduser --system --ingroup app app && \
-    mkdir /data && \
-    chown app:app /data
+    mkdir /data /health && \
+    chown app:app /data /health
 
 COPY requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir --requirement requirements.txt
@@ -18,4 +18,6 @@ COPY --chown=app:app backend ./backend
 
 USER app
 
-CMD ["python", "main.py"]
+EXPOSE 8080
+
+CMD ["gunicorn", "--no-control-socket", "--bind", "0.0.0.0:8080", "backend.web.app:app"]
