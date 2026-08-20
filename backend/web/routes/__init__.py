@@ -1,1 +1,1 @@
-"""Hold general API routes"""
+"""General API routes."""
