@@ -1,1 +1,1 @@
-"""Hold util routes"""
+"""Utility routes."""
