@@ -1,16 +1,19 @@
 """Health route"""
-import os
 import time
-from pathlib import Path
 
 from flask import Blueprint
 
+from backend.config.config import Config
+
 health_routes = Blueprint("health", __name__)
 
-HEALTH_FILE = Path(os.getenv("HEALTH_FILE", "/health/healthy"))
+config = Config()
+
+
+HEALTH_FILE = config.get_path_setting("HEALTH_FILE", "/health/healthy")
 HEALTH_MAX_AGE_SECONDS = max(
-    float(os.getenv("HEALTH_MAX_AGE_SECONDS", "90")),
-    float(os.getenv("OBSERVING_INTERVAL", "30")) * 3,
+    config.get_float_setting("HEALTH_MAX_AGE_SECONDS", "90"),
+    config.get_float_setting("OBSERVING_INTERVAL", "30") * 3,
 )
 
 

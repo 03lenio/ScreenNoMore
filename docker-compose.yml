@@ -14,8 +14,6 @@ services:
       - /tmp:size=16m,mode=1777
     volumes:
       - health:/health:ro
-    ports:
-      - "8080:8080"
     healthcheck:
       test:
         - CMD
