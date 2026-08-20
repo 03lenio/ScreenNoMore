@@ -5,7 +5,10 @@ services:
     restart: unless-stopped
     init: true
     stop_grace_period: 20s
+    ports:
+      - "127.0.0.1:8080:8080"
     environment:
+      DATABASE_CONFIG_PATH: /data/screennomore.db
       HEALTH_FILE: /health/healthy
       HEALTH_MAX_AGE_SECONDS: 90
       OBSERVING_INTERVAL: ${OBSERVING_INTERVAL:-30}
@@ -13,6 +16,7 @@ services:
     tmpfs:
       - /tmp:size=16m,mode=1777
     volumes:
+      - ./data:/data
       - health:/health:ro
     healthcheck:
       test:
