@@ -37,7 +37,10 @@ def _positive_int(name: str, value: str) -> int:
 def main() -> int:
     health_file = os.getenv("HEALTH_FILE")
     if health_file:
-        Path(health_file).unlink(missing_ok=True)
+        try:
+            Path(health_file).unlink(missing_ok=True)
+        except OSError as exc:
+            logger.warning("Failed to remove health file %s: %s", health_file, exc)
 
     _required_string(config, "NEXTDNS_API_KEY")
     profile_id = _required_string(config, "NEXTDNS_PROFILE_ID")
