@@ -49,7 +49,7 @@ services:
       LOG_LEVEL: INFO
       MAX_CONSECUTIVE_FAILURES: 10
       MAX_LOG_PAGES: 20
-      DATABASE_PATH: /data/screennomore.db
+      DATABASE_CONFIG_PATH: /data/screennomore.db
       HEALTH_FILE: /health/healthy
       HEALTH_MAX_AGE_SECONDS: 90
     read_only: true
