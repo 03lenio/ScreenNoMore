@@ -5,8 +5,8 @@ services:
     restart: unless-stopped
     init: true
     stop_grace_period: 20s
-    ports:
-      - "127.0.0.1:8080:8080"
+    expose:
+      - "8080"
     environment:
       DATABASE_CONFIG_PATH: /data/screennomore.db
       HEALTH_FILE: /health/healthy
